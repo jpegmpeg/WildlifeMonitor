@@ -1,0 +1,15 @@
+[project]
+name = "Wildlife_monitor"
+version = "0.1.0"
+dependencies = [
+    "numpy",
+    "av",
+    "yt-dlp",
+    "ultralytics",
+    "tabulate",
+    "torchaudio",
+    "transformers"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
