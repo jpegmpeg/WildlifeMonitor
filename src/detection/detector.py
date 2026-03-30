@@ -64,6 +64,9 @@ class AudioDetector:
     """Class for detecting audio events from the video, specifcally animal related"""
     def __init__(self, env: AudioEnvironment, device="mps"):
         self.labels = env.classes #set the relevant classes into the model so it knows what to predict
+
+        #If time fix this later, would be better to predict each class individually rather than 
+        #have them all compete in a softmax 
         self.pipeline = pipeline(
             "zero-shot-audio-classification",
             model="laion/larger_clap_music_and_speech", #Use CLAP as PANN with classification flexibility
@@ -82,12 +85,12 @@ class AudioDetector:
             detected_sounds.append(detected)
         return detected_sounds
 
-    def detect(self, audio_frame, timestamp:float, duration: float, sample_rate = 32000,top_k=3):
+    def detect(self, audio_frame, timestamp:float, duration: float, sample_rate = 32000,top_k=2):
         """With a single audio segment, detect and classify the sound segment"""
-        #for now im going to use the pieline with top k as a substitute for multiple detection, but its not ideal since the sigmoid stretches scores out
-        #would be better later if I have time to do the pipeline manually and then for each class check if it passes a threshold (multi label classificaiton)
+        #for now im going to use the pieline with top k as a substitute for multiple detection, but its not great sub since the sigmoid stretches scores out
+        #would be a lot better later if I have time to do the pipeline manually and then for each class check if it passes a threshold (multi label classificaiton)
         audio_detections = self.pipeline(
-            audio_frame, 
+            audio_frame,
             candidate_labels=self.labels,
         )
         top_detections = audio_detections[:top_k] #grab the highest confidence score 

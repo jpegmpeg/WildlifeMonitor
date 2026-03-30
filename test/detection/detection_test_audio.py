@@ -5,10 +5,7 @@ More of a scratchpad to script test than automated validation tests.
 
 from src.ingest.ingester import IngestConfig, MediaStreamIngester
 from src.detection.detector import AudioDetector
-from src.detection.detection_unit import AudioDetection
-import src.detection.environment as env
 import src.detection.audio_environment as aenv
-from tabulate import tabulate
 
 #run from root folder
 path = './data/raw_input/NamibiaCam： Baby Giraffe with family - 6⧸12⧸2021.mp4'
