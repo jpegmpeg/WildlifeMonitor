@@ -24,7 +24,7 @@ WETLAND = Environment("wetland", [
 
 SAVANNA = Environment("savanna", [
     "lion", "elephant", "giraffe", "zebra", "cheetah",
-    "hyena", "wildebeest", "gazelle", "hippo", "rhino",
+    "hyena",  "gazelle", "hippo", "rhino",
     "warthog", "baboon", "ostrich", "vulture", "bird",
 ])
 

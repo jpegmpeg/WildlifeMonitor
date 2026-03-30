@@ -8,7 +8,10 @@ dependencies = [
     "ultralytics",
     "tabulate",
     "torchaudio",
-    "transformers"
+    "transformers",
+    "fastapi",
+    "uvicorn",
+    "python-multipart"
 ]
 
 [tool.setuptools.packages.find]

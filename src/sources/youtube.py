@@ -1,4 +1,4 @@
-from fetch_base import MediaFetcher, MediaResults
+from .fetch_base import MediaFetcher, MediaResults
 from urllib.parse import urlparse
 import yt_dlp
 from pathlib import Path

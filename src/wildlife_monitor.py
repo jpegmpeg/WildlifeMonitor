@@ -8,6 +8,7 @@ import src.detection.environment as env
 import src.detection.audio_environment as aenv
 from src.fusion.temporal_fusion import FusionLayer
 from src.analyse.analysis_layer import AnalysisLayer
+from src.analyse.snapshot import snapshot_event_frames
 
 
 
@@ -20,26 +21,45 @@ def wildlife_monitor(video_path: str, environment: str) -> dict:
 
     #Go through and detect visual results 
     all_visual_results = []
+    seen_tracks = set() #keep track quickly for a realtime alert
+
+    print("------------------ Ingestion Begins --------------------------")
 
     for frame, timestamp, i in ingester.iterate_frames():
-        all_visual_results.extend(image_detector.track(frame, timestamp, i))
+        detected_animals = image_detector.track(frame, timestamp, i)
+        all_visual_results.extend(detected_animals)
+
+        #since I havent implemented this for livestream, but a requirement is an Alert, I wil implement one here
+        #it will print in the consol as its ingesting the video frames if a new animal has been detected 
+        for detected in detected_animals:
+            if detected.track_id is not None and detected.track_id not in seen_tracks:
+                seen_tracks.add(detected.track_id)
+                alert = f"[ALERT] New {detected.label} detected at {timestamp:.1f}s"
+                print(alert)
+
 
     #Go through and detect audio results 
     all_audio_results = []
 
     for waveform, timestamp in ingester.iterate_audio():
         all_audio_results.extend(audio_detector.detect(waveform, timestamp,config.audio_window))
-        
+
+    print("------------------  Ingestion Done  --------------------------")
+
     #fuse and print summaries
     fusion = FusionLayer(window_size=3.0)
     fused = fusion.fuse(all_visual_results, all_audio_results)
 
     #Analysis layer test
     analyser = AnalysisLayer(fused, environment)
-
-    return {
+    all_events = analyser.generate_all_events()
+    wildlife_found =  {
         "animal_count": analyser.unique_animal_count(),
         "species": analyser.species_counts(),
         "dominant_sounds": analyser.dominant_sounds(),
-        "events": [e.to_dict() for e in analyser.generate_all_events()],
+        "events": [e.to_dict() for e in all_events],
     }
+
+    snapshot_event_frames(video_path, all_events)
+    
+    return wildlife_found
