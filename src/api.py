@@ -8,14 +8,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pathlib import Path
-from clean import clear_directory
+from src.clean import clear_directory
 
 from src.wildlife_monitor import wildlife_monitor
 from src.sources.youtube import  YouTubeFetcher
 
 
 BASE_DIR = Path(__file__).parent.parent #this brings you to the root folder
+print(BASE_DIR)
 DATA_DIR = BASE_DIR / "data" 
+print(DATA_DIR)
 FRAMES_DIR = DATA_DIR/ "output" / "frames"
 VIDEO_DIR = DATA_DIR / "raw_input"
 

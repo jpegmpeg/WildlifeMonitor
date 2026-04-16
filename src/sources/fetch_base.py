@@ -16,10 +16,10 @@ from pathlib import Path
 @dataclass
 class MediaConfig:
     """this class will provide the config for the different medias I may use"""
-    output_dir: Path = field(default_factory=lambda: Path("../data/raw_input")) #default store will be in raw inputs
+    output_dir: Path = field(default_factory=lambda: Path("./data/raw_input")) #default store will be in raw inputs
     format: str = "bestvideo[ext=mp4][vcodec^=avc1]+bestaudio[ext=m4a]/best[ext=mp4]" #default for youtube
     quality: str | None = None
-    filename_template: str = "%(title)s.%(ext)s" #default template name for stored video
+    filename_template: str = "%(title)s.%(ext)s" #default template name for stoßred video
     #check that the output directory is Path and the directory exists after initialization 
     def __post_init__(self):
         self.output_dir = Path(self.output_dir)

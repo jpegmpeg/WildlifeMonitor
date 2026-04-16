@@ -11,7 +11,8 @@ dependencies = [
     "transformers",
     "fastapi",
     "uvicorn",
-    "python-multipart"
+    "python-multipart",
+    "opencv-python"
 ]
 
 [tool.setuptools.packages.find]
