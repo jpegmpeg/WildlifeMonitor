@@ -69,7 +69,7 @@ class AudioDetector:
         #have them all compete in a softmax 
         self.pipeline = pipeline(
             "zero-shot-audio-classification",
-            model="laion/larger_clap_music_and_speech", #Use CLAP as PANN with classification flexibility
+            model="laion/larger_clap_general", #Use CLAP as PANN with classification flexibility
             device=device,
         )
     def make_objects(self, results, timestamp:float, duration:float):
