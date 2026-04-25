@@ -3,12 +3,14 @@ Final pipeline that ingests a video, detects animals and sounds, fuses the signa
 """
 
 from src.ingest.ingester import IngestConfig, MediaStreamIngester
-from src.detection.detector import VisualDetector, AudioDetector
+from src.detection.detector import VisualDetector, AudioDetector, ModelConfig
+from src.detection.parallel_detection import run_parallel_detection
 import src.detection.environment as env
 import src.detection.audio_environment as aenv
 from src.fusion.temporal_fusion import FusionLayer
 from src.analyse.analysis_layer import AnalysisLayer
 from src.analyse.snapshot import snapshot_event_frames
+import time
 
 
 
@@ -16,34 +18,20 @@ def wildlife_monitor(video_path: str, environment: str) -> dict:
 
     config = IngestConfig(sample_fps=1.0)
     ingester = MediaStreamIngester(video_path, config)
-    image_detector = VisualDetector(env.get(environment))
+    model_config = ModelConfig()
+    image_detector = VisualDetector(env.get(environment),model_config)
     audio_detector = AudioDetector(aenv.get(environment))
 
     #Go through and detect visual results 
     all_visual_results = []
-    seen_tracks = set() #keep track quickly for a realtime alert
-
-    print("------------------ Ingestion Begins --------------------------")
-
-    for frame, timestamp, i in ingester.iterate_frames():
-        detected_animals = image_detector.track(frame, timestamp, i)
-        all_visual_results.extend(detected_animals)
-
-        #since I havent implemented this for livestream, but a requirement is an Alert, I wil implement one here
-        #it will print in the consol as its ingesting the video frames if a new animal has been detected 
-        for detected in detected_animals:
-            if detected.track_id is not None and detected.track_id not in seen_tracks:
-                seen_tracks.add(detected.track_id)
-                alert = f"[ALERT] New {detected.label} detected at {timestamp:.1f}s"
-                print(alert)
-
-
-    #Go through and detect audio results 
     all_audio_results = []
 
-    for waveform, timestamp in ingester.iterate_audio():
-        all_audio_results.extend(audio_detector.detect(waveform, timestamp,config.audio_window))
-
+    print("------------------ Ingestion Begins --------------------------")
+    start = time.perf_counter()
+    all_visual_results, all_audio_results = run_parallel_detection(
+        ingester, image_detector, audio_detector, config.audio_window
+    )
+    print(f"[TIMING] Detection Complete: {time.perf_counter() - start:.2f}s")
     print("------------------  Ingestion Done  --------------------------")
 
     #fuse and print summaries

@@ -1,11 +1,11 @@
 tracker_type: botsort
-track_high_thresh: 0.25       #lower makes it easier to keep matching existing tracks
-track_low_thresh: 0.1
-new_track_thresh: 0.4         #higher makes it harder to create a new tracks so we dont get a lot of new animals that are the same one 
-track_buffer: 150             #frames to keep a "lost" track alive (depends on fps)
+track_high_thresh: 0.2       #lower makes it easier to keep matching existing tracks
+track_low_thresh: 0.05
+new_track_thresh: 0.5         #higher makes it harder to create a new tracks so we dont get a lot of new animals that are the same one 
+track_buffer: 100             #frames to keep a "lost" track alive (depends on fps)
 match_thresh: 0.85            #IoU match tolerance (higher is more lenient matching)
 proximity_thresh: 0.5
-appearance_thresh: 0.25       # lower → relies more on appearance (ReID features)
+appearance_thresh: 0.3       # lower → relies more on appearance (ReID features)
 gmc_method: sparseOptFlow
 with_reid: true               #enables appearance-based re-identification, hopefully helps with identifiying the same animal if it goes off screen
 model: auto

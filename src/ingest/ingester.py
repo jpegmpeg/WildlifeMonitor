@@ -18,8 +18,8 @@ class IngestConfig:
 
     #audio
     audio_sample_rate: int = 32000 #can vary with audio model, but PANN expects 32kHz
-    audio_window: float = 5 #5 second audio segment
-    audio_step: float = 0.5 #step in seconds for next audio chunk (<audio_window ensures overlap)
+    audio_window: float = 2 #5 second audio segment
+    audio_step: float = 1 #step in seconds for next audio chunk (<audio_window ensures overlap)
     audio_format: str  = "s16"
     audio_max_range: float = 32768.0 #the max integer value for s16 format, this normalizes the audio chunks
     audio_layout: str = "mono"

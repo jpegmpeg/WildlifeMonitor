@@ -7,10 +7,13 @@ dependencies = [
     "yt-dlp",
     "ultralytics",
     "tabulate",
+    "torch",
     "torchaudio",
     "transformers",
+    "open_clip_torch",
     "fastapi",
     "uvicorn",
+    "Pillow",
     "python-multipart",
     "opencv-python"
 ]
